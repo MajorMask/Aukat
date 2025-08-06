@@ -1,0 +1,48 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Country {
+  id                    String  @id @default(cuid())
+  name                  String  @unique
+  isoCode               String  @unique @map("iso_code")
+  gdpPerCapita          Float?  @map("gdp_per_capita")
+  happinessScore        Float?  @map("happiness_score")
+  lifeExpectancy        Float?  @map("life_expectancy")
+  educationIndex        Float?  @map("education_index")
+  freedomScore          Float?  @map("freedom_score")
+  carbonFootprintPerCapita Float? @map("carbon_footprint_per_capita")
+  healthcareIndex       Float?  @map("healthcare_index")
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+
+  @@map("countries")
+}
+
+model IncomePercentile {
+  id                String @id @default(cuid())
+  country           String
+  incomeUsd         Int    @map("income_usd")
+  globalPercentile  Float  @map("global_percentile")
+  countryPercentile Float  @map("country_percentile")
+
+  @@map("income_percentiles")
+}
+
+model UserCalculation {
+  id                String   @id @default(cuid())
+  sessionId         String?  @map("session_id")
+  country           String
+  age               Int
+  annualIncomeUsd   Int      @map("annual_income_usd")
+  educationLevel    String   @map("education_level")
+  results           Json
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  @@map("user_calculations")
+}
